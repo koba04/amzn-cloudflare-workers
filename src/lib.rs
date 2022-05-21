@@ -1,4 +1,4 @@
-use serde_json::json;
+use regex::Regex;
 use worker::*;
 
 mod utils;
@@ -29,8 +29,12 @@ pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Respo
     // functionality and a `RouteContext` which you can use to  and get route parameters and
     // Environment bindings like KV Stores, Durable Objects, Secrets, and Variables.
     router
-        .get("/", |mut req, _| {
-           Response::from_html(format!("<html><body><h1>Hello from Workers!!!</h1><p>This is a test {}</p></body></html>", req.path()))
+        .get("/", |req, _| {
+            let re = Regex::new(r"/dp/\w*?/").unwrap();
+            let url = &req.url().unwrap().to_string();
+            let caps = re.captures(url).unwrap();
+            let amazon_url = format!("https://amazon.co.jp/{}", caps.get(0).unwrap().as_str());
+            Response::from_html(format!("<html><body><h1>Amazon URL shorter</h1><p>Location: {}</p></body></html>", amazon_url))
         })
         .get("/worker-version", |_, ctx| {
             let version = ctx.var("WORKERS_RS_VERSION")?.to_string();
