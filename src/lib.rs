@@ -50,7 +50,7 @@ pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Respo
     // functionality and a `RouteContext` which you can use to  and get route parameters and
     // Environment bindings like KV Stores, Durable Objects, Secrets, and Variables.
     router
-        .get("/", move |req, _| {
+        .get("/", |req, _| {
             if let Some(amazon_url) = shorten(req.url().unwrap().to_string()) {
                 Response::redirect(Url::parse(&amazon_url).unwrap())
             } else {
