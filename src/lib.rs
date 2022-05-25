@@ -17,7 +17,7 @@ fn log_request(req: &Request) {
 fn shorten(url: String) -> Option<String> {
     let re = Regex::new(r"/dp/\w*?/").unwrap();
     if let Some(caps) = re.captures(&url) {
-        format!("https://amazon.co.jp/{}", caps.get(0).unwrap().as_str())
+        Some(format!("https://amazon.co.jp/{}", caps.get(0).unwrap().as_str()))
     } else {
         None
     }
