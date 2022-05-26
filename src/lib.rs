@@ -4,6 +4,17 @@ use urlencoding::decode;
 
 mod utils;
 
+static HTML: &str = r#"
+<html>
+    <body>
+        <h1>Amazon URL Shorter</h1>
+        <form method=get action=/shorten>
+            <input style=width:400 type=value name=q placeholder=https://amazon.co.jp/***/dp/{id}/*** />
+        </form>
+    </body>
+</html
+"#;
+
 fn log_request(req: &Request) {
     console_log!(
         "{} - [{}], located at: {:?}, within: {}",
@@ -23,16 +34,13 @@ fn shorten(url: String) -> Option<String> {
     }
 }
 
-static HTML: &str = r#"
-<html>
-    <body>
-        <h1>Amazon URL Shorter</h1>
-        <form method=get action=/shorten>
-            <input style=width:400 type=value name=q placeholder=https://amazon.co.jp/***/dp/{id}/*** />
-        </form>
-    </body>
-</html
-"#;
+fn response(url: String) -> Result<Response> {
+    if let Some(amazon_url) = shorten(url) {
+        Response::redirect(Url::parse(&amazon_url).unwrap())
+    } else {
+        Response::from_html(HTML)
+    }
+}
 
 #[event(fetch)]
 pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Response> {
@@ -51,25 +59,12 @@ pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Respo
     // Environment bindings like KV Stores, Durable Objects, Secrets, and Variables.
     router
         .get("/", |req, _| {
-            if let Some(amazon_url) = shorten(req.url().unwrap().to_string()) {
-                Response::redirect(Url::parse(&amazon_url).unwrap())
-            } else {
-                Response::from_html(HTML)
-                // Response::ok("test")
-            }
+            let url = req.url().unwrap().to_string();
+            response(url)
         })
         .get("/shorten", |req, _| {
             let url = decode(&req.url().unwrap().to_string()).expect("UTF-8").into_owned();
-            if let Some(amazon_url) = shorten(url) {
-                Response::redirect(Url::parse(&amazon_url).unwrap())
-            } else {
-                Response::from_html(HTML)
-                // Response::ok("test")
-            }
-        })
-        .get("/worker-version", |_, ctx| {
-            let version = ctx.var("WORKERS_RS_VERSION")?.to_string();
-            Response::ok(version)
+            response(url)
         })
         .run(req, env)
         .await
