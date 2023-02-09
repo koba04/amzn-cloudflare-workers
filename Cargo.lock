@@ -379,6 +379,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "pin-project"
+version = "1.0.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ad29a609b6bcd67fee905812e544992d216af9d755757c05ed2d0e15a74c6ecc"
+dependencies = [
+ "pin-project-internal",
+]
+
+[[package]]
+name = "pin-project-internal"
+version = "1.0.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "069bdb1e05adc7a8990dce9cc75370895fbe4e3d58b9b73bf1aee56359344a55"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "pin-project-lite"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -718,9 +738,9 @@ dependencies = [
 
 [[package]]
 name = "worker"
-version = "0.0.8"
+version = "0.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3848a83f15d6b2908b1654d123d11ae6dadd8b5bd77709847603752a0932dc77"
+checksum = "61ca7d7e62ce3c18176bafbb9efff5f2f599aefb01bf81a51e003f4fd47e2606"
 dependencies = [
  "async-trait",
  "chrono",
@@ -729,6 +749,7 @@ dependencies = [
  "http",
  "js-sys",
  "matchit",
+ "pin-project",
  "serde",
  "serde_json",
  "url",
@@ -755,9 +776,9 @@ dependencies = [
 
 [[package]]
 name = "worker-macros"
-version = "0.0.3"
+version = "0.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6bfb9b32a234ca78c62a3214f8d894eebea4930fb5d8730d79c4a3fbf1537703"
+checksum = "69c2b482518c7ae1d3f72917864cbd068ca65f0236e5deec0039713321c68489"
 dependencies = [
  "async-trait",
  "proc-macro2",
@@ -771,9 +792,9 @@ dependencies = [
 
 [[package]]
 name = "worker-sys"
-version = "0.0.3"
+version = "0.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f43ff762466dbaa7a1a8a191882829dea9f2c216bdedf8c40c6cff4a9e6c148"
+checksum = "96a9f46a3d2efc59119aa60229bc00f01e5bd178ac8b3a7b5cdbe0b70909973d"
 dependencies = [
  "cfg-if 0.1.10",
  "js-sys",
